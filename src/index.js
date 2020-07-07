@@ -3,12 +3,37 @@ import ReactDOM from 'react-dom';
 import Banner from './components/banner'
 import './index.css';
 
+class NewButton extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {isToggleOn: true};
+
+        this.manageClick = this.manageClick.bind(this);
+    }
+
+    manageClick() {
+        this.setState( state => ({
+            isToggleOn: !state.isToggleOn,
+        }));
+    }
+
+    render () {
+        return (
+            <button onClick={this.manageClick}>
+                {this.state.isToggleOn ? 'PRENDIDO' : 'APAGADO'}
+            </button>
+
+        )
+    }
+}
+
 function BigBanner() {
     return(
         <div>
             <Banner name='session' day="week"></Banner>
             <Banner name='class' day="month"></Banner>
             <Banner name='course'></Banner>
+            <NewButton />
         </div>
     );
 }
