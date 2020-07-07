@@ -1,10 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
+import Banner from './components/banner'
 import './index.css';
-
-function Banner(props) {
-    return <p>This is the first {props.name} in {props.day}.</p>
-}
 
 function BigBanner() {
     return(
@@ -16,19 +13,38 @@ function BigBanner() {
     );
 }
 
-function tick () {
-    const element = (
-        <div>
-            <h1>Hello, world!</h1>
-            <h2>It is {new Date().toLocaleTimeString()}.</h2>
-            <BigBanner/>
-        </div>
-    
-    );
-    
-    ReactDOM.render(
-        element, document.getElementById('root')
-    );
+
+function App () {
+  let [time, setTime] = useState(new Date().toLocaleTimeString());
+  let timerInterval = useRef(null);
+  
+  const getNewTime = () => {
+    setTime(new Date().toLocaleTimeString());
+  };
+
+  useEffect(() => {
+    console.log('this is running');
+    timerInterval.current = setInterval(getNewTime, 1000);
+  }, []);
+
+  const stopTimer = () => {
+    clearInterval(timerInterval.current);
+  };
+
+
+  return (
+    <div>
+      <h1>Hello, world!</h1>
+      <h2>It is {time}.</h2>
+      <BigBanner/>
+        <button onClick={stopTimer} >
+        Click me
+      </button>
+    </div>
+  );
+
 }
 
-setInterval(tick, 1000);
+ReactDOM.render(
+  <App />, document.getElementById('root')
+);
