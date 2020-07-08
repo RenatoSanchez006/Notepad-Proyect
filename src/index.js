@@ -1,75 +1,51 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
-import Banner from './components/banner'
 import './index.css';
 
-class NewButton extends React.Component {
+
+class InputForm extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {isToggleOn: true};
-
-        this.manageClick = this.manageClick.bind(this);
+        this.state = {text: ''}
+        
+        this.checkChange = this.checkChange.bind(this);
+        this.submitForm = this.submitForm.bind(this);
     }
 
-    manageClick() {
-        this.setState( state => ({
-            isToggleOn: !state.isToggleOn,
-        }));
+    submitForm (e) {
+        e.preventDefault()
     }
 
-    render () {
-        return (
-            <button onClick={this.manageClick}>
-                {this.state.isToggleOn ? 'PRENDIDO' : 'APAGADO'}
-            </button>
+    checkChange (e) {
+        this.setState({text: e.target.value})
+    }
 
+    render() {
+    return (
+        <div>
+            <form onSubmit={this.submitForm}>
+                <label>
+                    Enter Text:
+                    <textarea value={this.state.text} onChange={this.checkChange}/>
+                </label>
+                <input type="submit"></input>
+            </form>
+        </div>
         )
     }
 }
 
-function BigBanner() {
-    return(
+
+function App() {
+    return (
         <div>
-            <Banner name='session' day="week"></Banner>
-            <Banner name='class' day="month"></Banner>
-            <Banner name='course'></Banner>
-            <NewButton />
+            <h1> Hello World! </h1>
+            <InputForm/>
         </div>
-    );
-}
-
-
-function App () {
-  let [time, setTime] = useState(new Date().toLocaleTimeString());
-  let timerInterval = useRef(null);
-  
-  const getNewTime = () => {
-    setTime(new Date().toLocaleTimeString());
-  };
-
-  useEffect(() => {
-    console.log('this is running');
-    timerInterval.current = setInterval(getNewTime, 1000);
-  }, []);
-
-  const stopTimer = () => {
-    clearInterval(timerInterval.current);
-  };
-
-
-  return (
-    <div>
-      <h1>Hello, world!</h1>
-      <h2>It is {time}.</h2>
-      <BigBanner/>
-        <button onClick={stopTimer} >
-        Click me
-      </button>
-    </div>
-  );
+    )
 
 }
 
 ReactDOM.render(
-  <App />, document.getElementById('root')
+    <App />, document.getElementById('root')
 );
