@@ -2,6 +2,33 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
+class ListItems extends React.Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            items: [],
+        }
+    }
+    
+    addNewText (newText) {
+        let items = this.state.items;
+        items.push(newText);
+        this.setState ({items: items});
+    }
+
+    render () {
+        const items = this.state.items;
+        const listItems = items.map((item, index) => 
+            <li key={index}>{item}</li>
+        )
+        return (
+            <ul>
+                {listItems}
+            </ul>
+        )
+    }
+}
+
 
 class InputForm extends React.Component {
     constructor(props) {
@@ -14,6 +41,9 @@ class InputForm extends React.Component {
 
     submitForm (e) {
         e.preventDefault()
+        let text = this.state.text;
+        this.refs.addNewText.addNewText(text);
+        this.setState({text: ''})
     }
 
     checkChange (e) {
@@ -30,6 +60,7 @@ class InputForm extends React.Component {
                 </label>
                 <input type="submit"></input>
             </form>
+            <ListItems ref="addNewText"/>
         </div>
         )
     }
