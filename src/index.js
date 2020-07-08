@@ -2,16 +2,33 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
+function Actions(props) {
+    return (
+        <button onClick={props.onClick}>
+            Delete
+        </button>
+    )
+}
+
 class ListItems extends React.Component {
     constructor(props){
         super(props);
         this.state = {
             items: [],
         }
+        this.deleteItem = this.deleteItem.bind(this);
+    }
+
+    deleteItem() {
+        // let items = this.state.items;
+        // items.splice(0,1);
+        // console.log(items, items[index]);
+        console.log('delete item');
     }
     
     addNewText (newText) {
         let items = this.state.items;
+        // console.log(items);
         items.push(newText);
         this.setState ({items: items});
     }
@@ -19,7 +36,10 @@ class ListItems extends React.Component {
     render () {
         const items = this.state.items;
         const listItems = items.map((item, index) => 
-            <li key={index}>{item}</li>
+            <div key={index}>
+                <li>{item}</li>
+                <Actions onClick={this.deleteItem}/>
+            </div>
         )
         return (
             <ul>
@@ -28,7 +48,6 @@ class ListItems extends React.Component {
         )
     }
 }
-
 
 class InputForm extends React.Component {
     constructor(props) {
@@ -66,7 +85,6 @@ class InputForm extends React.Component {
     }
 }
 
-
 function App() {
     return (
         <div>
@@ -74,7 +92,6 @@ function App() {
             <InputForm/>
         </div>
     )
-
 }
 
 ReactDOM.render(
