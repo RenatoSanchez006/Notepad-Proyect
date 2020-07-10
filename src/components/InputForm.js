@@ -10,6 +10,7 @@ export default class InputForm extends React.Component {
     }
     this.checkChange = this.checkChange.bind(this);
     this.submitForm = this.submitForm.bind(this);
+    this.deleteItem = this.deleteItem.bind(this);
   }
 
   submitForm(e) {
@@ -22,6 +23,12 @@ export default class InputForm extends React.Component {
   addNewText(newText) {
     const { items } = this.state;
     items.push(newText);
+    this.setState({ items });
+  }
+
+  deleteItem(index){
+    const { items } = this.state;
+    items.splice(index, 1);
     this.setState({ items });
   }
 
@@ -40,7 +47,7 @@ export default class InputForm extends React.Component {
           </label>
           <input type="submit"></input>
         </form>
-        <ListItems items={items}/>
+        <ListItems items={items} deleteItem={this.deleteItem}/>
       </div>
     )
   }

@@ -1,8 +1,8 @@
 import React from 'react';
 
-export default function Actions(props) {
+export default function Actions({ delItem }) {
   return (
-    <button onClick={props.onClick}>
+    <button onClick={delItem}>
       Delete
     </button>
   )

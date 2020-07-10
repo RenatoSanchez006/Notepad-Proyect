@@ -4,14 +4,14 @@ import './index.css';
 import InputForm from './components/InputForm';
 
 function App() {
-    return (
-        <div>
-            <h1> Hello World! </h1>
-            <InputForm/>
-        </div>
-    )
+  return (
+    <div>
+      <h1> Hello World! </h1>
+      <InputForm />
+    </div>
+  )
 }
 
 ReactDOM.render(
-    <App />, document.getElementById('root')
+  <App />, document.getElementById('root')
 );
