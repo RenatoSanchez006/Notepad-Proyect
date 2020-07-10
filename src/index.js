@@ -2,86 +2,83 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-function Actions(props) {
+function Actions({ onDelete }) {
     return (
-        <button onClick={props.onClick}>
+        <button onClick={onDelete}>
             Delete
         </button>
     )
 }
 
-class ListItems extends React.Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            items: [],
-        }
-        this.deleteItem = this.deleteItem.bind(this);
-    }
+function ListItems ({ items, onDelete }) {
+  const listItems = items.map((item, index) => {
+    const deleteItem = () => onDelete(index);
+    return (
+      <div key={index}>
+        <li>{item}</li>
+        <Actions onDelete={deleteItem} />
+      </div>
+    );
+  });
 
-    deleteItem() {
-        // let items = this.state.items;
-        // items.splice(0,1);
-        // console.log(items, items[index]);
-        console.log('delete item');
-    }
-    
-    addNewText (newText) {
-        let items = this.state.items;
-        // console.log(items);
-        items.push(newText);
-        this.setState ({items: items});
-    }
-
-    render () {
-        const items = this.state.items;
-        const listItems = items.map((item, index) => 
-            <div key={index}>
-                <li>{item}</li>
-                <Actions onClick={this.deleteItem}/>
-            </div>
-        )
-        return (
-            <ul>
-                {listItems}
-            </ul>
-        )
-    }
+  return (
+    <ul>
+      {listItems}
+    </ul>
+  );
 }
 
 class InputForm extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {text: ''}
+      this.state = {
+        text: '',
+        items: [],
+      };
         
         this.checkChange = this.checkChange.bind(this);
         this.submitForm = this.submitForm.bind(this);
+        this.deleteItem = this.deleteItem.bind(this);
     }
 
     submitForm (e) {
         e.preventDefault()
-        let text = this.state.text;
-        this.refs.addNewText.addNewText(text);
-        this.setState({text: ''})
+        const { text } = this.state;
+        this.addNewText(text);
+        this.setState({text: ''});
     }
 
     checkChange (e) {
-        this.setState({text: e.target.value})
+        this.setState({text: e.target.value});
+    }
+
+    addNewText (newText) {
+      const { items } = this.state;
+
+      items.push(newText);
+      this.setState ({ items });
+    }
+
+    deleteItem(index) {
+      const { items } = this.state;
+      items.splice(index, 1);
+      this.setState({ items });
     }
 
     render() {
-    return (
-        <div>
-            <form onSubmit={this.submitForm}>
-                <label>
-                    Enter Text:
-                    <textarea value={this.state.text} onChange={this.checkChange}/>
-                </label>
-                <input type="submit"></input>
-            </form>
-            <ListItems ref="addNewText"/>
-        </div>
-        )
+      const  { items, text } = this.state;
+      return (
+          <div>
+              <form onSubmit={this.submitForm}>
+                  <label>
+                      Enter Text:
+                      <input value={text} onChange={this.checkChange}/>
+                  </label>
+                  <input type="submit"></input>
+              </form>
+              <ListItems items={items} onDelete={this.deleteItem} />
+          </div>
+      );
     }
 }
 
@@ -89,7 +86,7 @@ function App() {
     return (
         <div>
             <h1> Hello World! </h1>
-            <InputForm/>
+              <InputForm />
         </div>
     )
 }
