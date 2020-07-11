@@ -17,8 +17,13 @@ export default class InputForm extends React.Component {
   submitForm(e) {
     e.preventDefault()
     const { text } = this.state;
-    this.addNewText(text);
-    this.setState({ text: '' })
+    if (text === '' || text.trim().length === 0){
+      console.log('empy input');
+      alert('empty input');
+    } else {
+      this.addNewText(text);
+    }
+    this.setState({ text: '' });
   }
 
   addNewText(newText) {
