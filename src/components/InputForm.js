@@ -7,7 +7,11 @@ export default class InputForm extends React.Component {
     super(props);
     this.state = {
       text: '',
-      items: ['a', 'b', 'c'],
+      items: [
+        {name: 'a', status: false},
+        {name: 'b', status: false},
+        {name: 'c', status: false}
+      ],
     }
     this.checkChange = this.checkChange.bind(this);
     this.submitForm = this.submitForm.bind(this);
@@ -28,7 +32,8 @@ export default class InputForm extends React.Component {
 
   addNewText(newText) {
     const { items } = this.state;
-    items.push(newText);
+    const newItem = {name: newText, status: false};
+    items.push(newItem);
     this.setState({ items });
   }
 
