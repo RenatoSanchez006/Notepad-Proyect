@@ -1,5 +1,6 @@
 import React from 'react';
 import ListItems from './ListItems';
+import { Button, Input, InputLabel } from '@material-ui/core';
 
 export default class InputForm extends React.Component {
   constructor(props) {
@@ -41,11 +42,11 @@ export default class InputForm extends React.Component {
     return (
       <div>
         <form onSubmit={this.submitForm}>
-          <label>
+          <InputLabel>
             Enter Text:
-            <input value={text} onChange={this.checkChange} />
-          </label>
-          <input type="submit"></input>
+            <Input value={text} onChange={this.checkChange} />
+          </InputLabel>
+          <Button type="submit">Submit</Button>
         </form>
         <ListItems items={items} deleteItem={this.deleteItem}/>
       </div>

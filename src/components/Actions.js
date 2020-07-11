@@ -1,18 +1,18 @@
 import React from 'react';
-// import Button from '@material-ui/core/Button';
+import Button from '@material-ui/core/Button';
 
 export default function Actions({ delItem }) {
   return (
     <div>
-      <button onClick={delItem}>
+      <Button onClick={delItem}>
         Delete
-      </button>
-      {/* <button >
+      </Button>
+      <Button >
         Done
-      </button> */}
-      <button >
+      </Button>
+      <Button >
         Edit
-      </button>
+      </Button>
     </div>
   )
 }
