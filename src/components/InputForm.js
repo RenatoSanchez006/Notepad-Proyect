@@ -23,8 +23,7 @@ export default class InputForm extends React.Component {
     e.preventDefault()
     const { text } = this.state;
     if (text === '' || text.trim().length === 0){
-      console.log('empy input');
-      alert('empty input');
+      alert('Empty Input');
     } else {
       this.addNewText(text);
     }
@@ -51,7 +50,11 @@ export default class InputForm extends React.Component {
   updateStatus(event) {
     const { items } = this.state;
     const index = event.target.value;
-    items[index] = { name: items[index].name, status: event.target.checked };
+    const newStatus = event.target.checked;
+    const newItem = { name: items[index].name, status: newStatus }; 
+    
+    this.deleteItem(index);
+    newStatus ? items.push(newItem) : items.unshift(newItem);
     this.setState(items);
   }
 
