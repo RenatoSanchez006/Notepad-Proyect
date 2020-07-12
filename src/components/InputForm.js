@@ -16,6 +16,7 @@ export default class InputForm extends React.Component {
     this.checkChange = this.checkChange.bind(this);
     this.submitForm = this.submitForm.bind(this);
     this.deleteItem = this.deleteItem.bind(this);
+    this.updateStatus = this.updateStatus.bind(this);
   }
 
   submitForm(e) {
@@ -33,7 +34,7 @@ export default class InputForm extends React.Component {
   addNewText(newText) {
     const { items } = this.state;
     const newItem = {name: newText, status: false};
-    items.push(newItem);
+    items.unshift(newItem);
     this.setState({ items });
   }
 
@@ -47,6 +48,13 @@ export default class InputForm extends React.Component {
     this.setState({ text: e.target.value })
   }
 
+  updateStatus(event) {
+    const { items } = this.state;
+    const index = event.target.value;
+    items[index] = { name: items[index].name, status: event.target.checked };
+    this.setState(items);
+  }
+
   render() {
     const { items, text } = this.state;
     return (
@@ -58,7 +66,11 @@ export default class InputForm extends React.Component {
           </InputLabel>
           <Button type="submit">Submit</Button>
         </form>
-        <ListItems items={items} deleteItem={this.deleteItem}/>
+        <ListItems 
+          items={items} 
+          deleteItem={this.deleteItem} 
+          checkStatus={this.updateStatus}
+        />
       </div>
     )
   }
