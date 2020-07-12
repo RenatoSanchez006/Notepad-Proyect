@@ -1,18 +1,14 @@
 import React from 'react';
 import ListItems from './ListItems';
-import { Button, Input, InputLabel } from '@material-ui/core';
+import { Typography, Button, Input, InputLabel, FormControl } from '@material-ui/core';
 
 export default class InputForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       text: '',
-      itemsTodo: [
-        { name: 'a', status: false }
-      ],
-      itemsDone: [
-        { name: 'd', status: true }
-      ],
+      itemsTodo: [],
+      itemsDone: [],
     }
     this.checkChange = this.checkChange.bind(this);
     this.submitForm = this.submitForm.bind(this);
@@ -66,17 +62,15 @@ export default class InputForm extends React.Component {
     const doneLen = itemsDone.length;
     return (
       <div>
-        <form onSubmit={this.submitForm}>
-          <InputLabel>
-            Enter Text:
-            <Input value={text} onChange={this.checkChange} />
-          </InputLabel>
-          <Button type="submit">Submit</Button>
-        </form>
+        <FormControl fullWidth>
+          <InputLabel>Enter Text:</InputLabel>
+          <Input value={text} onChange={this.checkChange} />
+          <Button color="primary" onClick={this.submitForm}>Submit</Button>
+        </FormControl>
         {
           todoLen > 0 &&
           <div>
-            <h3>To do:</h3>
+            <Typography variant="h5">To do:</Typography>
             <ListItems
               items={itemsTodo}
               deleteItem={this.deleteItem}
@@ -87,7 +81,7 @@ export default class InputForm extends React.Component {
         {
           doneLen > 0 &&
           <div>
-            <h3>Done: </h3>
+            <Typography variant="h5">Done:</Typography>
             <ListItems
               items={itemsDone}
               deleteItem={this.deleteItem}

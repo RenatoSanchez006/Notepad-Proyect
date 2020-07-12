@@ -1,18 +1,16 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
+import { IconButton } from '@material-ui/core';
+import { DeleteOutlined, EditOutlined } from '@material-ui/icons';
 
 export default function Actions({ delItem }) {
   return (
     <div>
-      <Button onClick={delItem}>
-        Delete
-      </Button>
-      <Button >
-        Done
-      </Button>
-      <Button >
-        Edit
-      </Button>
+      <IconButton color="primary">
+        <EditOutlined />
+      </IconButton>
+      <IconButton color="secondary" onClick={delItem}>
+        <DeleteOutlined />
+      </IconButton>
     </div>
   )
 }
