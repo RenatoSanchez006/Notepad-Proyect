@@ -5,7 +5,7 @@ import { List, ListItem, ListItemText, Checkbox, ListItemIcon } from '@material-
 
 export default function ListItems({ items, deleteItem, checkStatus }) {
   const listItems = items.map((item, index) => {
-    const delItem = () => deleteItem(index);
+    const delItem = () => deleteItem(index, item.status);
     return (
       <ListItem key={index}>
         <ListItemIcon>

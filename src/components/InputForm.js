@@ -7,10 +7,11 @@ export default class InputForm extends React.Component {
     super(props);
     this.state = {
       text: '',
-      items: [
-        {name: 'a', status: false},
-        {name: 'b', status: false},
-        {name: 'c', status: false}
+      itemsTodo: [
+        { name: 'a', status: false }
+      ],
+      itemsDone: [
+        { name: 'd', status: true }
       ],
     }
     this.checkChange = this.checkChange.bind(this);
@@ -31,16 +32,16 @@ export default class InputForm extends React.Component {
   }
 
   addNewText(newText) {
-    const { items } = this.state;
-    const newItem = {name: newText, status: false};
-    items.unshift(newItem);
-    this.setState({ items });
+    const { itemsTodo } = this.state;
+    const newItem = { name: newText, status: false };
+    itemsTodo.unshift(newItem);
+    this.setState({ itemsTodo });
   }
 
-  deleteItem(index){
-    const { items } = this.state;
-    items.splice(index, 1);
-    this.setState({ items });
+  deleteItem(index, status) {
+    const { itemsTodo, itemsDone } = this.state;
+    status ? itemsDone.splice(index, 1) : itemsTodo.splice(index, 1);
+    this.setState({ itemsTodo, itemsDone });
   }
 
   checkChange(e) {
@@ -48,18 +49,21 @@ export default class InputForm extends React.Component {
   }
 
   updateStatus(event) {
-    const { items } = this.state;
+    const { itemsTodo, itemsDone } = this.state;
     const index = event.target.value;
-    const newStatus = event.target.checked;
-    const newItem = { name: items[index].name, status: newStatus }; 
-    
-    this.deleteItem(index);
-    newStatus ? items.push(newItem) : items.unshift(newItem);
-    this.setState(items);
+    const status = event.target.checked;
+    const name = status ? itemsTodo[index].name : itemsDone[index].name;
+    const newItem = { name, status };
+
+    this.deleteItem(index, !status);
+    status ? itemsDone.push(newItem) : itemsTodo.push(newItem);
+    this.setState({ itemsTodo, itemsDone });
   }
 
   render() {
-    const { items, text } = this.state;
+    const { itemsTodo, itemsDone, text } = this.state;
+    const todoLen = itemsTodo.length;
+    const doneLen = itemsDone.length;
     return (
       <div>
         <form onSubmit={this.submitForm}>
@@ -69,11 +73,28 @@ export default class InputForm extends React.Component {
           </InputLabel>
           <Button type="submit">Submit</Button>
         </form>
-        <ListItems 
-          items={items} 
-          deleteItem={this.deleteItem} 
-          checkStatus={this.updateStatus}
-        />
+        {
+          todoLen > 0 &&
+          <div>
+            <h3>To do:</h3>
+            <ListItems
+              items={itemsTodo}
+              deleteItem={this.deleteItem}
+              checkStatus={this.updateStatus}
+            />
+          </div>
+        }
+        {
+          doneLen > 0 &&
+          <div>
+            <h3>Done: </h3>
+            <ListItems
+              items={itemsDone}
+              deleteItem={this.deleteItem}
+              checkStatus={this.updateStatus}
+            />
+          </div>
+        }
       </div>
     )
   }
