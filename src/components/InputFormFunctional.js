@@ -28,22 +28,22 @@ export default function InputFormFunctional(props) {
     setTodo(itemsTodo);
     setDone(itemsDone);
   }
-
+  
   const checkChange = (e) => {
     setText(e.target.value);
   }
-
-  // updateStatus(event) {
-  //   const { itemsTodo, itemsDone } = this.state;
-  //   const index = event.target.value;
-  //   const status = event.target.checked;
-  //   const name = status ? itemsTodo[index].name : itemsDone[index].name;
-  //   const newItem = { name, status };
-
-  //   this.deleteItem(index, !status);
-  //   status ? itemsDone.push(newItem) : itemsTodo.push(newItem);
-  //   this.setState({ itemsTodo, itemsDone });
-  // }
+  
+  const updateStatus = (event) => {
+    const index = event.target.value;
+    const status = event.target.checked;
+    const name = status ? itemsTodo[index].name : itemsDone[index].name;
+    const newItem = { name, status };
+    
+    deleteItem(index, !status);
+    status ? itemsDone.push(newItem) : itemsTodo.push(newItem);
+    setTodo(itemsTodo);
+    setDone(itemsDone);
+  }
 
   const todoLen = itemsTodo.length;
   const doneLen = itemsDone.length;
@@ -60,8 +60,8 @@ export default function InputFormFunctional(props) {
           <Typography variant="h5">To do:</Typography>
           <ListItems
             items={itemsTodo}
-          deleteItem={deleteItem}
-          // checkStatus={this.updateStatus}
+            deleteItem={deleteItem}
+            checkStatus={updateStatus}
           />
         </div>
       }
@@ -72,7 +72,7 @@ export default function InputFormFunctional(props) {
           <ListItems
             items={itemsDone}
             deleteItem={deleteItem}
-          // checkStatus={this.updateStatus}
+            checkStatus={updateStatus}
           />
         </div>
       }
