@@ -15,7 +15,7 @@ export default function ListItems({ items, deleteItem, checkStatus, editMode, on
     const edit = (event) => onEditChange (event, index, status);
     return (
       <div key={index}>
-        <ListItem>
+        <ListItem >
           <ListItemIcon>
             <Checkbox onChange={newStatus} checked={status}/>
           </ListItemIcon>

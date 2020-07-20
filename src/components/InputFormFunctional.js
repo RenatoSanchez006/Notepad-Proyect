@@ -53,7 +53,6 @@ export default function InputFormFunctional(props) {
     setText('');
   }, [text, addNewText]);
 
-
   const deleteItem = useCallback((itemIndex, itemStatus) => {
     const [itemsCopy, newItems] = getLists(itemStatus);
     itemsCopy.splice(itemIndex, 1);
