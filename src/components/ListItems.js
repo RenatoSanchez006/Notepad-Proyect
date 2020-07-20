@@ -6,8 +6,8 @@ export default function ListItems({ items, deleteItem, checkStatus }) {
   const listItems = items.map((item, index) => {
     const delItem = () => deleteItem(index, item.status);
     return (
-      <div>
-        <ListItem key={index}>
+      <div key={index}>
+        <ListItem >
           <ListItemIcon>
             <Checkbox onChange={checkStatus} checked={item.status} value={index} />
           </ListItemIcon>
