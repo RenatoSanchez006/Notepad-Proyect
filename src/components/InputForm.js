@@ -1,6 +1,6 @@
 import React from 'react';
 import ListItems from './ListItems';
-import { Typography, Button, Input, InputLabel, FormControl } from '@material-ui/core';
+import { Typography, Button, FormControl, TextField } from '@material-ui/core';
 
 export default class InputForm extends React.Component {
   constructor(props) {
@@ -63,8 +63,7 @@ export default class InputForm extends React.Component {
     return (
       <div>
         <FormControl fullWidth>
-          <InputLabel>Enter Text:</InputLabel>
-          <Input value={text} onChange={this.checkChange} />
+          <TextField label="Enter task" value={text} onChange={this.checkChange} />
           <Button color="primary" onClick={this.submitForm}>Submit</Button>
         </FormControl>
         {
