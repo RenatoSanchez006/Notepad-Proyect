@@ -39,7 +39,7 @@ export default function InputFormFunctional(props) {
 
   const submitForm = (e) => {
     e.preventDefault();
-    if (!text || text.trim().length === 0) {
+    if (!text || !text.trim()) {
       alert('Empty Input');
     } else {
       addNewText(text);
@@ -64,7 +64,6 @@ export default function InputFormFunctional(props) {
       todoClone.splice(index, 1);
       setTodo(todoClone);
     }
-
   }
   
   const checkChange = (e) => {
