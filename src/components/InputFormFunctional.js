@@ -9,7 +9,7 @@ export default function InputFormFunctional(props) {
 
   const submitForm = (e) => {
     e.preventDefault();
-    if (text === '' || text.trim().length === 0) {
+    if (!text || !text.trim()) {
       alert('Empty Input');
     } else {
       addNewText(text);
@@ -19,14 +19,21 @@ export default function InputFormFunctional(props) {
 
   const addNewText = (newText) => {
     const newItem = { name: newText, status: false };
-    itemsTodo.unshift(newItem);
-    setTodo(itemsTodo);
+    const iTodoCopy = [...itemsTodo];
+    iTodoCopy.unshift(newItem);
+    setTodo(iTodoCopy);
   }
 
   const deleteItem = (index, status) => {
-    status ? itemsDone.splice(index, 1) : itemsTodo.splice(index, 1);
-    setTodo(itemsTodo);
-    setDone(itemsDone);
+    if (status) {
+      const iDoneCopy = [...itemsDone];
+      iDoneCopy.splice(index, 1);
+      setDone(iDoneCopy);
+    } else {
+      const iTodoCopy = [...itemsTodo];
+      iTodoCopy.splice(index, 1);
+      setTodo(iTodoCopy);
+    }
   }
   
   const checkChange = (e) => {
@@ -40,9 +47,15 @@ export default function InputFormFunctional(props) {
     const newItem = { name, status };
     
     deleteItem(index, !status);
-    status ? itemsDone.push(newItem) : itemsTodo.push(newItem);
-    setTodo(itemsTodo);
-    setDone(itemsDone);
+    if (status) {
+      const iDoneCopy = [...itemsDone];
+      iDoneCopy.push(newItem);
+      setDone(iDoneCopy);
+    } else {
+      const iTodoCopy = [...itemsTodo];
+      iTodoCopy.push(newItem);
+      setTodo(iTodoCopy);
+    }
   }
 
   const todoLen = itemsTodo.length;
