@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ListItems from './ListItems';
-import { Typography, Button, Input, InputLabel, FormControl } from '@material-ui/core';
+import { Typography, Button, TextField, FormControl } from '@material-ui/core';
 
 function fetchAllData() {
   return new Promise((resolve) => {
@@ -89,14 +89,25 @@ export default function InputFormFunctional(props) {
     }
   }
 
+  const editMode = (index, isEdit, status) => {
+    if (status) {
+      const iDoneCopy = [...itemsDone];
+      iDoneCopy[index].isEditing = !isEdit;
+      setDone(iDoneCopy);
+    } else {
+      const iTodoCopy = [...itemsTodo];
+      iTodoCopy[index].isEditing = !isEdit;
+      setTodo(iTodoCopy);
+    }
+  }
+
   const todoLen = itemsTodo.length;
   const doneLen = itemsDone.length;
   return (
     <div>
       {isAllDone ? "You're Done!" : null}
       <FormControl fullWidth>
-        <InputLabel>Enter Text:</InputLabel>
-        <Input value={text} onChange={checkChange} />
+        <TextField label="Enter Task:" value={text} onChange={checkChange} />
         <Button color="primary" onClick={submitForm}>Submit</Button>
       </FormControl>
       {
@@ -107,6 +118,7 @@ export default function InputFormFunctional(props) {
             items={itemsTodo}
             deleteItem={deleteItem}
             checkStatus={updateStatus}
+            editMode={editMode}
           />
         </div>
       }
@@ -118,6 +130,7 @@ export default function InputFormFunctional(props) {
             items={itemsDone}
             deleteItem={deleteItem}
             checkStatus={updateStatus}
+            editMode={editMode}
           />
         </div>
       }
