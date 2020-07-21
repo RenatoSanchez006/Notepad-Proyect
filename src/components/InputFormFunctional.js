@@ -36,8 +36,8 @@ export default function InputFormFunctional(props) {
   }
 
   const deleteItem = (itemIndex, itemStatus) => {
-    const itemsCopy = items.filter(item => item.status === itemStatus);
-    const newItems = items.filter(item => item.status === !itemStatus);
+    const itemsCopy = items.filter(item => item.status === itemStatus); // Copy of items to change
+    const newItems = items.filter(item => item.status === !itemStatus); // Copy of items that won't change
     itemsCopy.splice(itemIndex, 1);
     newItems.push(...itemsCopy);
     setItems(newItems);
@@ -47,24 +47,13 @@ export default function InputFormFunctional(props) {
     setText(e.target.value);
   }
   
-  // const updateStatus = (newStatus, index) => {
-  //   const item = newStatus ? itemsTodo[index] : itemsDone[index];
-  //   const newItem = {
-  //     ...item,
-  //     status: newStatus
-  //   }
-
-  //   deleteItem(index, !newStatus);
-  //   if (newStatus) {
-  //     const iDoneCopy = [...itemsDone];
-  //     iDoneCopy.push(newItem);
-  //     setDone(iDoneCopy);
-  //   } else {
-  //     const iTodoCopy = [...itemsTodo];
-  //     iTodoCopy.push(newItem);
-  //     setTodo(iTodoCopy);
-  //   }
-  // }
+  const updateStatus = (newStatus, index) => {
+    const itemsCopy = items.filter(item => item.status !== newStatus); // Copy of items to change
+    const newItems = items.filter(item => item.status === newStatus); // Copy of items that won't change
+    itemsCopy[index].status = newStatus;
+    newItems.push(...itemsCopy);
+    setItems(newItems);
+  }
 
   // const editMode = (index, isEdit, status) => {
   //   if (status) {
@@ -103,7 +92,7 @@ export default function InputFormFunctional(props) {
           <ListItems
             items={iTodo}
             deleteItem={deleteItem}
-            // checkStatus={updateStatus}
+            checkStatus={updateStatus}
             // editMode={editMode}
             // onEditChange={onEditChange}
           />
@@ -116,7 +105,7 @@ export default function InputFormFunctional(props) {
           <ListItems
             items={iDone}
             deleteItem={deleteItem}
-            // checkStatus={updateStatus}
+            checkStatus={updateStatus}
             // editMode={editMode}
             // onEditChange={onEditChange}
           />
