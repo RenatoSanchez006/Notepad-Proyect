@@ -101,6 +101,18 @@ export default function InputFormFunctional(props) {
     }
   }
 
+  const onEditChange = (e, index, itemStatus) => {
+    if (itemStatus) {
+      const iDoneCopy = [...itemsDone];
+      iDoneCopy[index].name = e.target.value;
+      setDone(iDoneCopy);
+    } else {
+      const iTodoCopy = [...itemsTodo];
+      iTodoCopy[index].name = e.target.value;
+      setTodo(iTodoCopy);
+    }
+  }
+
   const todoLen = itemsTodo.length;
   const doneLen = itemsDone.length;
   return (
@@ -119,6 +131,7 @@ export default function InputFormFunctional(props) {
             deleteItem={deleteItem}
             checkStatus={updateStatus}
             editMode={editMode}
+            onEditChange={onEditChange}
           />
         </div>
       }
@@ -131,6 +144,7 @@ export default function InputFormFunctional(props) {
             deleteItem={deleteItem}
             checkStatus={updateStatus}
             editMode={editMode}
+            onEditChange={onEditChange}
           />
         </div>
       }
