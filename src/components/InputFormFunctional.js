@@ -40,9 +40,7 @@ export default function InputFormFunctional(props) {
     setText(e.target.value);
   }
   
-  const updateStatus = (event) => {
-    const index = event.target.value;
-    const newStatus = event.target.checked;
+  const updateStatus = (newStatus, index) => {
     const item = newStatus ? itemsTodo[index] : itemsDone[index];
     const newItem = {
       ...item,

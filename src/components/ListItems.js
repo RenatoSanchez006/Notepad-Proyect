@@ -6,13 +6,14 @@ import { List, ListItem, ListItemText, Checkbox, ListItemIcon, Divider, TextFiel
 export default function ListItems({ items, deleteItem, checkStatus, editMode, onEditChange }) {
   const listItems = items.map((item, index) => {
     const delItem = () => deleteItem(index, item.status);
+    const newStatus = (event) => checkStatus (event.target.checked, index);
     const editItem = () => editMode (index, item.isEditing, item.status);
     const edit = (event) => onEditChange (event, index, item.status);
     return (
       <div key={index}>
         <ListItem>
           <ListItemIcon>
-            <Checkbox onChange={checkStatus} checked={item.status} value={index} />
+            <Checkbox onChange={newStatus} checked={item.status}/>
           </ListItemIcon>
           <Box width="80%">
           {
