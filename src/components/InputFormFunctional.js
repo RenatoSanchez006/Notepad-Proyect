@@ -11,12 +11,15 @@ export default function InputFormFunctional(props) {
     { name: 'd', status: true, isEditing: false },
     { name: 'e', status: true, isEditing: false },
   ]);
-  const iDone = items.filter(item => item.status === true);
-  const iTodo = items.filter(item => item.status === false);
-
+  const [iDone, setDone] = useState([]);
+  const [iTodo, setTodo] = useState([]);
+  
   useEffect(() => {
-    console.log('items modified');
-  }, [iDone, iTodo]);
+    const done = items.filter(item => item.status === true);
+    setDone(done);
+    const todo = items.filter(item => item.status === false);
+    setTodo(todo);
+  }, [items]);
 
   const submitForm = (e) => {
     e.preventDefault();
