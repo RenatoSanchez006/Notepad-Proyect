@@ -54,30 +54,23 @@ export default function InputFormFunctional(props) {
     newItems.push(...itemsCopy);
     setItems(newItems);
   }
-
-  // const editMode = (index, isEdit, status) => {
-  //   if (status) {
-  //     const iDoneCopy = [...itemsDone];
-  //     iDoneCopy[index].isEditing = !isEdit;
-  //     setDone(iDoneCopy);
-  //   } else {
-  //     const iTodoCopy = [...itemsTodo];
-  //     iTodoCopy[index].isEditing = !isEdit;
-  //     setTodo(iTodoCopy);
-  //   }
-  // }
-
-  // const onEditChange = (e, index, itemStatus) => {
-  //   if (itemStatus) {
-  //     const iDoneCopy = [...itemsDone];
-  //     iDoneCopy[index].name = e.target.value;
-  //     setDone(iDoneCopy);
-  //   } else {
-  //     const iTodoCopy = [...itemsTodo];
-  //     iTodoCopy[index].name = e.target.value;
-  //     setTodo(iTodoCopy);
-  //   }
-  // }
+  
+  const editMode = (index, isEdit, itemStatus) => {
+    const itemsCopy = items.filter(item => item.status === itemStatus); // Copy of items to change
+    const newItems = items.filter(item => item.status !== itemStatus); // Copy of items that won't change
+    
+    itemsCopy[index].isEditing = !isEdit;
+    newItems.push(...itemsCopy);
+    setItems(newItems);
+  }
+  
+  const onEditChange = (e, index, itemStatus) => {
+    const itemsCopy = items.filter(item => item.status === itemStatus); // Copy of items to change
+    const newItems = items.filter(item => item.status !== itemStatus); // Copy of items that won't change
+    itemsCopy[index].name = e.target.value;
+    newItems.push(...itemsCopy);
+    setItems(newItems);
+  }
 
   return (
     <div>
@@ -93,8 +86,8 @@ export default function InputFormFunctional(props) {
             items={iTodo}
             deleteItem={deleteItem}
             checkStatus={updateStatus}
-            // editMode={editMode}
-            // onEditChange={onEditChange}
+            editMode={editMode}
+            onEditChange={onEditChange}
           />
         </div>
       }
@@ -106,8 +99,8 @@ export default function InputFormFunctional(props) {
             items={iDone}
             deleteItem={deleteItem}
             checkStatus={updateStatus}
-            // editMode={editMode}
-            // onEditChange={onEditChange}
+            editMode={editMode}
+            onEditChange={onEditChange}
           />
         </div>
       }
