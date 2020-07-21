@@ -1,11 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ListItems from './ListItems';
 import { Typography, Button, TextField, FormControl } from '@material-ui/core';
 
 export default function InputFormFunctional(props) {
   const [text, setText] = useState('');
-  const [itemsTodo, setTodo] = useState([{ name: 'a', status: false, isEditing: false }]);
-  const [itemsDone, setDone] = useState([]);
+  const [items, setItems] = useState([
+    { name: 'a', status: false, isEditing: false },
+    { name: 'b', status: true, isEditing: false },
+    { name: 'c', status: false, isEditing: false },
+    { name: 'd', status: true, isEditing: false },
+    { name: 'e', status: true, isEditing: false },
+  ]);
+  const iDone = items.filter(item => item.status === true);
+  const iTodo = items.filter(item => item.status === false);
+
+  useEffect(() => {
+    console.log('items modified');
+  }, [iDone, iTodo]);
 
   const submitForm = (e) => {
     e.preventDefault();
@@ -19,72 +30,66 @@ export default function InputFormFunctional(props) {
 
   const addNewText = (newText) => {
     const newItem = { name: newText, status: false, isEditing: false };
-    const iTodoCopy = [...itemsTodo];
-    iTodoCopy.unshift(newItem);
-    setTodo(iTodoCopy);
+    const itemsCopy = [...items];
+    itemsCopy.unshift(newItem);
+    setItems(itemsCopy);
   }
 
-  const deleteItem = (index, status) => {
-    if (status) {
-      const iDoneCopy = [...itemsDone];
-      iDoneCopy.splice(index, 1);
-      setDone(iDoneCopy);
-    } else {
-      const iTodoCopy = [...itemsTodo];
-      iTodoCopy.splice(index, 1);
-      setTodo(iTodoCopy);
-    }
+  const deleteItem = (itemIndex, itemStatus) => {
+    const itemsCopy = items.filter(item => item.status === itemStatus);
+    const newItems = items.filter(item => item.status === !itemStatus);
+    itemsCopy.splice(itemIndex, 1);
+    newItems.push(...itemsCopy);
+    setItems(newItems);
   }
   
   const checkChange = (e) => {
     setText(e.target.value);
   }
   
-  const updateStatus = (newStatus, index) => {
-    const item = newStatus ? itemsTodo[index] : itemsDone[index];
-    const newItem = {
-      ...item,
-      status: newStatus
-    }
+  // const updateStatus = (newStatus, index) => {
+  //   const item = newStatus ? itemsTodo[index] : itemsDone[index];
+  //   const newItem = {
+  //     ...item,
+  //     status: newStatus
+  //   }
 
-    deleteItem(index, !newStatus);
-    if (newStatus) {
-      const iDoneCopy = [...itemsDone];
-      iDoneCopy.push(newItem);
-      setDone(iDoneCopy);
-    } else {
-      const iTodoCopy = [...itemsTodo];
-      iTodoCopy.push(newItem);
-      setTodo(iTodoCopy);
-    }
-  }
+  //   deleteItem(index, !newStatus);
+  //   if (newStatus) {
+  //     const iDoneCopy = [...itemsDone];
+  //     iDoneCopy.push(newItem);
+  //     setDone(iDoneCopy);
+  //   } else {
+  //     const iTodoCopy = [...itemsTodo];
+  //     iTodoCopy.push(newItem);
+  //     setTodo(iTodoCopy);
+  //   }
+  // }
 
-  const editMode = (index, isEdit, status) => {
-    if (status) {
-      const iDoneCopy = [...itemsDone];
-      iDoneCopy[index].isEditing = !isEdit;
-      setDone(iDoneCopy);
-    } else {
-      const iTodoCopy = [...itemsTodo];
-      iTodoCopy[index].isEditing = !isEdit;
-      setTodo(iTodoCopy);
-    }
-  }
+  // const editMode = (index, isEdit, status) => {
+  //   if (status) {
+  //     const iDoneCopy = [...itemsDone];
+  //     iDoneCopy[index].isEditing = !isEdit;
+  //     setDone(iDoneCopy);
+  //   } else {
+  //     const iTodoCopy = [...itemsTodo];
+  //     iTodoCopy[index].isEditing = !isEdit;
+  //     setTodo(iTodoCopy);
+  //   }
+  // }
 
-  const onEditChange = (e, index, itemStatus) => {
-    if (itemStatus) {
-      const iDoneCopy = [...itemsDone];
-      iDoneCopy[index].name = e.target.value;
-      setDone(iDoneCopy);
-    } else {
-      const iTodoCopy = [...itemsTodo];
-      iTodoCopy[index].name = e.target.value;
-      setTodo(iTodoCopy);
-    }
-  }
+  // const onEditChange = (e, index, itemStatus) => {
+  //   if (itemStatus) {
+  //     const iDoneCopy = [...itemsDone];
+  //     iDoneCopy[index].name = e.target.value;
+  //     setDone(iDoneCopy);
+  //   } else {
+  //     const iTodoCopy = [...itemsTodo];
+  //     iTodoCopy[index].name = e.target.value;
+  //     setTodo(iTodoCopy);
+  //   }
+  // }
 
-  const todoLen = itemsTodo.length;
-  const doneLen = itemsDone.length;
   return (
     <div>
       <FormControl fullWidth>
@@ -92,28 +97,28 @@ export default function InputFormFunctional(props) {
         <Button color="primary" onClick={submitForm}>Submit</Button>
       </FormControl>
       {
-        todoLen > 0 &&
+        !!iTodo.length &&
         <div>
           <Typography variant="h5">To do:</Typography>
           <ListItems
-            items={itemsTodo}
+            items={iTodo}
             deleteItem={deleteItem}
-            checkStatus={updateStatus}
-            editMode={editMode}
-            onEditChange={onEditChange}
+            // checkStatus={updateStatus}
+            // editMode={editMode}
+            // onEditChange={onEditChange}
           />
         </div>
       }
       {
-        doneLen > 0 &&
+        !!iDone.length &&
         <div>
           <Typography variant="h5">Done:</Typography>
           <ListItems
-            items={itemsDone}
+            items={iDone}
             deleteItem={deleteItem}
-            checkStatus={updateStatus}
-            editMode={editMode}
-            onEditChange={onEditChange}
+            // checkStatus={updateStatus}
+            // editMode={editMode}
+            // onEditChange={onEditChange}
           />
         </div>
       }
