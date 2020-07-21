@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import ListItems from './ListItems';
-import { Typography, Button, Input, InputLabel, FormControl } from '@material-ui/core';
+import { Typography, Button, TextField, FormControl } from '@material-ui/core';
 
 export default function InputFormFunctional(props) {
   const [text, setText] = useState('');
-  const [itemsTodo, setTodo] = useState([{ name: 'a', status: false }]);
-  const [itemsDone, setDone] = useState([{ name: 'a', status: true }]);
+  const [itemsTodo, setTodo] = useState([{ name: 'a', status: false, isEditing: false }]);
+  const [itemsDone, setDone] = useState([]);
 
   const submitForm = (e) => {
     e.preventDefault();
@@ -18,7 +18,7 @@ export default function InputFormFunctional(props) {
   }
 
   const addNewText = (newText) => {
-    const newItem = { name: newText, status: false };
+    const newItem = { name: newText, status: false, isEditing: false };
     const iTodoCopy = [...itemsTodo];
     iTodoCopy.unshift(newItem);
     setTodo(iTodoCopy);
@@ -42,12 +42,15 @@ export default function InputFormFunctional(props) {
   
   const updateStatus = (event) => {
     const index = event.target.value;
-    const status = event.target.checked;
-    const name = status ? itemsTodo[index].name : itemsDone[index].name;
-    const newItem = { name, status };
-    
-    deleteItem(index, !status);
-    if (status) {
+    const newStatus = event.target.checked;
+    const item = newStatus ? itemsTodo[index] : itemsDone[index];
+    const newItem = {
+      ...item,
+      status: newStatus
+    }
+
+    deleteItem(index, !newStatus);
+    if (newStatus) {
       const iDoneCopy = [...itemsDone];
       iDoneCopy.push(newItem);
       setDone(iDoneCopy);
@@ -58,13 +61,24 @@ export default function InputFormFunctional(props) {
     }
   }
 
+  const editMode = (index, isEdit, status) => {
+    if (status) {
+      const iDoneCopy = [...itemsDone];
+      iDoneCopy[index].isEditing = !isEdit;
+      setDone(iDoneCopy);
+    } else {
+      const iTodoCopy = [...itemsTodo];
+      iTodoCopy[index].isEditing = !isEdit;
+      setTodo(iTodoCopy);
+    }
+  }
+
   const todoLen = itemsTodo.length;
   const doneLen = itemsDone.length;
   return (
     <div>
       <FormControl fullWidth>
-        <InputLabel>Enter Text:</InputLabel>
-        <Input value={text} onChange={checkChange} />
+        <TextField label="Enter Task:" value={text} onChange={checkChange} />
         <Button color="primary" onClick={submitForm}>Submit</Button>
       </FormControl>
       {
@@ -75,6 +89,7 @@ export default function InputFormFunctional(props) {
             items={itemsTodo}
             deleteItem={deleteItem}
             checkStatus={updateStatus}
+            editMode={editMode}
           />
         </div>
       }
@@ -86,6 +101,7 @@ export default function InputFormFunctional(props) {
             items={itemsDone}
             deleteItem={deleteItem}
             checkStatus={updateStatus}
+            editMode={editMode}
           />
         </div>
       }
