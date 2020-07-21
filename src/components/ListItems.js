@@ -2,10 +2,12 @@ import React from 'react';
 import Actions from './Actions';
 import { List, ListItem, ListItemText, Checkbox, ListItemIcon, Divider, TextField, Box } from '@material-ui/core';
 
-export default function ListItems({ items, deleteItem, checkStatus, editMode }) {
+
+export default function ListItems({ items, deleteItem, checkStatus, editMode, onEditChange }) {
   const listItems = items.map((item, index) => {
     const delItem = () => deleteItem(index, item.status);
     const editItem = () => editMode (index, item.isEditing, item.status);
+    const edit = (event) => onEditChange (event, index, item.status);
     return (
       <div key={index}>
         <ListItem>
@@ -15,7 +17,7 @@ export default function ListItems({ items, deleteItem, checkStatus, editMode }) 
           <Box width="80%">
           {
             item.isEditing ?
-            <TextField fullWidth value={item.name} /> : 
+            <TextField fullWidth value={item.name} onChange={edit}/> : 
             <ListItemText>{item.name}</ListItemText>
           }
           </Box>
