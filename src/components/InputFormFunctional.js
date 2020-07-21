@@ -15,27 +15,22 @@ function fetchAllData() {
 
 export default function InputFormFunctional(props) {
   const [text, setText] = useState('');
-  const [itemsTodo, setTodo] = useState([]);
-  const [itemsDone, setDone] = useState([]);
-  const [isAllDone, setAllDone] = useState(false);
-
+  const [items, setItems] = useState([
+    { name: 'a', status: false, isEditing: false },
+    { name: 'b', status: true, isEditing: false },
+    { name: 'c', status: false, isEditing: false },
+    { name: 'd', status: true, isEditing: false },
+    { name: 'e', status: true, isEditing: false },
+  ]);
+  const [iDone, setDone] = useState([]);
+  const [iTodo, setTodo] = useState([]);
+  
   useEffect(() => {
-    async function fetchData(argument) {
-      const { done, todo } = await fetchAllData();
-      setTodo(todo);
-      setDone(done);
-    }
-
-    fetchData();
-  }, [])
-
-  useEffect(() => {
-    if (itemsDone.length && !itemsTodo.length) {
-      setAllDone(true);
-    } else {
-      setAllDone(false);
-    }
-  }, [itemsDone, itemsTodo]);
+    const done = items.filter(item => item.status === true);
+    setDone(done);
+    const todo = items.filter(item => item.status === false);
+    setTodo(todo);
+  }, [items]);
 
   const submitForm = (e) => {
     e.preventDefault();
@@ -48,86 +43,61 @@ export default function InputFormFunctional(props) {
   }
 
   const addNewText = (newText) => {
-    const todoClone = [...itemsTodo];
-    const newItem = { name: newText, status: false };
-    todoClone.unshift(newItem);
-    setTodo(todoClone);
+    const newItem = { name: newText, status: false, isEditing: false };
+    const itemsCopy = [...items];
+    itemsCopy.unshift(newItem);
+    setItems(itemsCopy);
   }
 
-  const deleteItem = (index, status) => {
-    if (status) {
-      const doneClone = [...itemsDone];
-      doneClone.splice(index, 1);
-      setDone(doneClone);
-    } else {
-      const todoClone = [...itemsTodo]
-      todoClone.splice(index, 1);
-      setTodo(todoClone);
-    }
+  const deleteItem = (itemIndex, itemStatus) => {
+    const itemsCopy = items.filter(item => item.status === itemStatus); // Copy of items to change
+    const newItems = items.filter(item => item.status === !itemStatus); // Copy of items that won't change
+    itemsCopy.splice(itemIndex, 1);
+    newItems.push(...itemsCopy);
+    setItems(newItems);
   }
   
   const checkChange = (e) => {
     setText(e.target.value);
   }
   
-  const updateStatus = (event) => {
-    const todoClone = [...itemsTodo]
-    const doneClone = [...itemsDone];
-    const index = event.target.value;
-    const status = event.target.checked;
-    const name = status ? todoClone[index].name : doneClone[index].name;
-    const newItem = { name, status };
+  const updateStatus = (newStatus, index) => {
+    const itemsCopy = items.filter(item => item.status !== newStatus); // Copy of items to change
+    const newItems = items.filter(item => item.status === newStatus); // Copy of items that won't change
+    itemsCopy[index].status = newStatus;
+    newItems.push(...itemsCopy);
+    setItems(newItems);
+  }
+  
+  const editMode = (index, isEdit, itemStatus) => {
+    const itemsCopy = items.filter(item => item.status === itemStatus); // Copy of items to change
+    const newItems = items.filter(item => item.status !== itemStatus); // Copy of items that won't change
     
-    deleteItem(index, !status);
-
-    if (status) {
-      doneClone.push(newItem)
-      setDone(doneClone);
-    } else {
-      todoClone.push(newItem)
-      setTodo(todoClone);
-    }
+    itemsCopy[index].isEditing = !isEdit;
+    newItems.push(...itemsCopy);
+    setItems(newItems);
   }
-
-  const editMode = (index, isEdit, status) => {
-    if (status) {
-      const iDoneCopy = [...itemsDone];
-      iDoneCopy[index].isEditing = !isEdit;
-      setDone(iDoneCopy);
-    } else {
-      const iTodoCopy = [...itemsTodo];
-      iTodoCopy[index].isEditing = !isEdit;
-      setTodo(iTodoCopy);
-    }
-  }
-
+  
   const onEditChange = (e, index, itemStatus) => {
-    if (itemStatus) {
-      const iDoneCopy = [...itemsDone];
-      iDoneCopy[index].name = e.target.value;
-      setDone(iDoneCopy);
-    } else {
-      const iTodoCopy = [...itemsTodo];
-      iTodoCopy[index].name = e.target.value;
-      setTodo(iTodoCopy);
-    }
+    const itemsCopy = items.filter(item => item.status === itemStatus); // Copy of items to change
+    const newItems = items.filter(item => item.status !== itemStatus); // Copy of items that won't change
+    itemsCopy[index].name = e.target.value;
+    newItems.push(...itemsCopy);
+    setItems(newItems);
   }
 
-  const todoLen = itemsTodo.length;
-  const doneLen = itemsDone.length;
   return (
     <div>
-      {isAllDone ? "You're Done!" : null}
       <FormControl fullWidth>
         <TextField label="Enter Task:" value={text} onChange={checkChange} />
         <Button color="primary" onClick={submitForm}>Submit</Button>
       </FormControl>
       {
-        todoLen > 0 &&
+        !!iTodo.length &&
         <div>
           <Typography variant="h5">To do:</Typography>
           <ListItems
-            items={itemsTodo}
+            items={iTodo}
             deleteItem={deleteItem}
             checkStatus={updateStatus}
             editMode={editMode}
@@ -136,11 +106,11 @@ export default function InputFormFunctional(props) {
         </div>
       }
       {
-        doneLen > 0 &&
+        !!iDone.length &&
         <div>
           <Typography variant="h5">Done:</Typography>
           <ListItems
-            items={itemsDone}
+            items={iDone}
             deleteItem={deleteItem}
             checkStatus={updateStatus}
             editMode={editMode}
