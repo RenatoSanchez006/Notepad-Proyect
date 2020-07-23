@@ -60,13 +60,17 @@ export default function InputFormFunctional(props) {
   }, []);
   
   const updateStatus = useCallback((newStatus, itemId) => {
+    if (editionMode) { // Verify if an element it's currently in edition Mode 
+      alert('Save or cancel changes');
+      return;
+    }
     const newItems = [...items];
     newItems.find(item => item.id === itemId).status = newStatus; // Update item status by id
     setItems(newItems);
-  }, [items]);
+  }, [items, editionMode]);
   
   const editMode = useCallback((itemId, newEdit) => {
-    if (!editionMode) {
+    if (!editionMode) { // Verify if an element it's currently in edition Mode
       setEditionMode(true);
       const itemsCopy = [...items];
       itemsCopy.find(item => item.id === itemId).isEdit = !newEdit; // Update isEdit by id
