@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import ListItems from './ListItems';
 import { Typography, Button, TextField, FormControl } from '@material-ui/core';
 import { v4 as uuid } from 'uuid';
 
-// const todos = new Array(50).fill(null).map(() => ({ id: uuid(), name: 'spider', status: false, isEdit: false }));
-// const dones = new Array(50).fill(null).map(() => ({ id: uuid(), name: 'man', status: true, isEdit: false }));
+// Testing Arrays
+const todos = new Array(50).fill(null).map(() => ({ id: uuid(), name: 'spider', status: false, isEdit: false }));
+const dones = new Array(50).fill(null).map(() => ({ id: uuid(), name: 'man', status: true, isEdit: false }));
 
 export default function InputFormFunctional(props) {
   const [text, setText] = useState('');
@@ -16,7 +17,7 @@ export default function InputFormFunctional(props) {
     { id: uuid(), name: 'c', status: false, isEdit: false },
     { id: uuid(), name: 'd', status: true, isEdit: false },
     { id: uuid(), name: 'e', status: true, isEdit: false },
-    // ...todos, ...dones
+    ...todos, ...dones
   ]);
   
   const iDone = useMemo(() => {
@@ -29,42 +30,42 @@ export default function InputFormFunctional(props) {
   useEffect(() => {
     console.log(items);
   }, [items]);
-
-  const submitForm = (e) => {
-    e.preventDefault();
-    if (!text || !text.trim()) {
-      alert('Empty Input');
-    } else {
-      addNewText(text);
-    }
-    setText('');
-  }
-
-  const addNewText = (newText) => {
+  
+  const addNewText = useCallback((newText) => {
     const newItem = { id: uuid(), name: newText, status: false, isEdit: false };
     const itemsCopy = [...items];
     itemsCopy.unshift(newItem);
     setItems(itemsCopy);
-  }
+  }, [items]);
 
-  const deleteItem = (itemId) => {
+  const submitForm = useCallback((e) => {
+    e.preventDefault();
+    if (!text.trim()) {
+      alert('Empty Task');
+    } else {
+      addNewText(text);
+    }
+    setText('');
+  }, [text, addNewText]);
+
+  const deleteItem = useCallback((itemId) => {
     const newItems = [...items];
     const indexToRemove = newItems.findIndex(item => item.id === itemId);
     newItems.splice(indexToRemove, 1);
     setItems(newItems);
-  }
+  }, [items]);
   
-  const checkChange = (e) => {
+  const checkChange = useCallback((e) => {
     setText(e.target.value);
-  }
+  }, []);
   
-  const updateStatus = (newStatus, itemId) => {
+  const updateStatus = useCallback((newStatus, itemId) => {
     const newItems = [...items];
     newItems.find(item => item.id === itemId).status = newStatus; // Update item status by id
     setItems(newItems);
-  }
+  }, [items]);
   
-  const editMode = (itemId, newEdit) => {
+  const editMode = useCallback((itemId, newEdit) => {
     if (!editionMode) {
       setEditionMode(true);
       const itemsCopy = [...items];
@@ -73,28 +74,32 @@ export default function InputFormFunctional(props) {
       const newEditText = itemsCopy.find(item => item.id === itemId).name; // Get item to edit name by id
       setEditionText(newEditText);
     }
-  }
+  }, [items, editionMode]);
   
-  const onEditTextChange = (e) => {
+  const onEditTextChange = useCallback((e) => {
     setEditionText(e.target.value);
-  }
+  }, []);
 
-  const saveEditChange = (itemId) => {
+  const saveEditChange = useCallback((itemId) => {
+    if (!editionText.trim()) {
+      alert('Empty Task');
+      return;
+    }
     const itemsCopy = [...items];
-    itemsCopy.find(item => item.id === itemId).name = editionText;
-    itemsCopy.find(item => item.id === itemId).isEdit = false;
+    itemsCopy.find(item => item.id === itemId).name = editionText; // Set item.name to editionText
+    itemsCopy.find(item => item.id === itemId).isEdit = false; // Set item.isEdit to false
     setItems(itemsCopy);
     setEditionText('');
     setEditionMode(false);
-  }
+  }, [items, editionText]);
   
-  const cancelEditChange = (itemId) => {
+  const cancelEditChange = useCallback((itemId) => {
     const itemsCopy = [...items];
     itemsCopy.find(item => item.id === itemId).isEdit = false;
     setItems(itemsCopy);
     setEditionText('');
     setEditionMode(false);
-  }
+  }, [items]);
   
   return (
     <div>
