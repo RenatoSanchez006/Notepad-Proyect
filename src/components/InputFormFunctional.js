@@ -60,19 +60,17 @@ export default function InputFormFunctional(props) {
   
   const updateStatus = (newStatus, itemId) => {
     const newItems = [...items];
-    const indexToUpdate = newItems.findIndex(item => item.id === itemId);
-    newItems[indexToUpdate].status = newStatus;
+    newItems.find(item => item.id === itemId).status = newStatus; // Update item status by id
     setItems(newItems);
   }
   
-  const editMode = (itemId) => {
+  const editMode = (itemId, newEdit) => {
     if (!editionMode) {
       setEditionMode(true);
-      const newItems = [...items];
-      const indexToUpdate = newItems.findIndex(item => item.id === itemId);
-      newItems[indexToUpdate].isEdit = !newItems[indexToUpdate].isEdit;
-      setItems(newItems);
-      const newEditText = newItems[indexToUpdate].name;
+      const itemsCopy = [...items];
+      itemsCopy.find(item => item.id === itemId).isEdit = !newEdit; // Update isEdit by id
+      setItems(itemsCopy);
+      const newEditText = itemsCopy.find(item => item.id === itemId).name; // Get item to edit name by id
       setEditionText(newEditText);
     }
   }

@@ -7,7 +7,7 @@ export default function ListItems({ items, deleteItem, updateStatus, editMode, o
   const listItems = items.map((item) => {
     const delItem = () => deleteItem(item.id);
     const newStatus = (event) => updateStatus(event.target.checked, item.id);
-    const editItem = () => editMode(item.id);
+    const editItem = () => editMode(item.id, item.isEdit);
     const edit = (event) => onEditTextChange(event);
     const save = () => saveChange(item.id);
     const cancel = () => cancelChange(item.id);
