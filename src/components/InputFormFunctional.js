@@ -3,14 +3,20 @@ import ListItems from './ListItems';
 import { Typography, Button, TextField, FormControl } from '@material-ui/core';
 import { v4 as uuid } from 'uuid';
 
+// const todos = new Array(50).fill(null).map(() => ({ id: uuid(), name: 'spider', status: false, isEdit: false }));
+// const dones = new Array(50).fill(null).map(() => ({ id: uuid(), name: 'man', status: true, isEdit: false }));
+
 export default function InputFormFunctional(props) {
   const [text, setText] = useState('');
+  const [editionMode, setEditionMode] = useState(false);
+  const [editionText, setEditionText] = useState('');
   const [items, setItems] = useState([
-    { id: uuid(), name: 'a', status: false, isEditing: false },
-    { id: uuid(), name: 'b', status: true, isEditing: false },
-    { id: uuid(), name: 'c', status: false, isEditing: false },
-    { id: uuid(), name: 'd', status: true, isEditing: false },
-    { id: uuid(), name: 'e', status: true, isEditing: false },
+    { id: uuid(), name: 'a', status: false, isEdit: false },
+    { id: uuid(), name: 'b', status: true, isEdit: false },
+    { id: uuid(), name: 'c', status: false, isEdit: false },
+    { id: uuid(), name: 'd', status: true, isEdit: false },
+    { id: uuid(), name: 'e', status: true, isEdit: false },
+    // ...todos, ...dones
   ]);
   
   const iDone = useMemo(() => {
@@ -60,19 +66,38 @@ export default function InputFormFunctional(props) {
   }
   
   const editMode = (itemId) => {
-    const newItems = [...items];
-    const indexToUpdate = newItems.findIndex(item => item.id === itemId);
-    newItems[indexToUpdate].isEdit = !newItems[indexToUpdate].isEdit
-    setItems(newItems);
+    if (!editionMode) {
+      setEditionMode(true);
+      const newItems = [...items];
+      const indexToUpdate = newItems.findIndex(item => item.id === itemId);
+      newItems[indexToUpdate].isEdit = !newItems[indexToUpdate].isEdit;
+      setItems(newItems);
+      const newEditText = newItems[indexToUpdate].name;
+      setEditionText(newEditText);
+    }
   }
   
-  const onEditChange = (e, itemId) => {
-    const newItems = [...items];
-    const indexToUpdate = newItems.findIndex(item => item.id === itemId);
-    newItems[indexToUpdate].name = e.target.value;
-    setItems(newItems);
+  const onEditTextChange = (e) => {
+    setEditionText(e.target.value);
   }
 
+  const saveEditChange = (itemId) => {
+    const itemsCopy = [...items];
+    itemsCopy.find(item => item.id === itemId).name = editionText;
+    itemsCopy.find(item => item.id === itemId).isEdit = false;
+    setItems(itemsCopy);
+    setEditionText('');
+    setEditionMode(false);
+  }
+  
+  const cancelEditChange = (itemId) => {
+    const itemsCopy = [...items];
+    itemsCopy.find(item => item.id === itemId).isEdit = false;
+    setItems(itemsCopy);
+    setEditionText('');
+    setEditionMode(false);
+  }
+  
   return (
     <div>
       <FormControl fullWidth>
@@ -88,7 +113,10 @@ export default function InputFormFunctional(props) {
             deleteItem={deleteItem}
             updateStatus={updateStatus}
             editMode={editMode}
-            onEditChange={onEditChange}
+            onEditTextChange={onEditTextChange}
+            editionText={editionText}
+            saveChange={saveEditChange}
+            cancelChange={cancelEditChange}
           />
         </div>
       }
@@ -101,7 +129,10 @@ export default function InputFormFunctional(props) {
             deleteItem={deleteItem}
             updateStatus={updateStatus}
             editMode={editMode}
-            onEditChange={onEditChange}
+            onEditTextChange={onEditTextChange}
+            editionText={editionText}
+            saveChange={saveEditChange}
+            cancelChange={cancelEditChange}
           />
         </div>
       }

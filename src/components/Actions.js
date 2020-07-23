@@ -1,22 +1,29 @@
 import React from 'react';
 import { IconButton, Box } from '@material-ui/core';
-import { DeleteOutlined, EditOutlined, Done } from '@material-ui/icons';
+import { DeleteOutlined, EditOutlined, CheckCircleOutline, CancelOutlined } from '@material-ui/icons';
 
-export default function Actions({ delItem, editItem, isEdit }) {
+export default function Actions({ delItem, editItem, isEdit, saveEdit, cancelEdit }) {
   return (
     <Box width="30%">
       {
-        isEdit ?
-        <IconButton onClick={editItem}>
-          <Done />
-        </IconButton>:
-        <IconButton color="primary" onClick={editItem}>
-          <EditOutlined />
-        </IconButton> 
+        !isEdit ?
+          <div>
+            <IconButton color="primary" onClick={editItem}>
+              <EditOutlined />
+            </IconButton>
+            <IconButton color="secondary" onClick={delItem}>
+              <DeleteOutlined />
+            </IconButton>
+          </div> :
+          <div>
+            <IconButton color="primary" onClick={saveEdit}>
+              <CheckCircleOutline />
+            </IconButton>
+            <IconButton color="secondary" onClick={cancelEdit}>
+              <CancelOutlined />
+            </IconButton>
+          </div> 
       }
-      <IconButton color="secondary" onClick={delItem}>
-        <DeleteOutlined />
-      </IconButton>
     </Box>
   )
 }
