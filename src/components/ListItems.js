@@ -30,6 +30,7 @@ export default function ListItems({ items, deleteItem, updateStatus, editMode, o
             isEdit={item.isEdit}
             saveEdit={save}
             cancelEdit={cancel}
+            status={item.status}
           />
         </ListItem>
         <Divider />
