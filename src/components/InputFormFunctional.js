@@ -1,24 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import ListItems from './ListItems';
 import { Typography, Button, TextField, FormControl } from '@material-ui/core';
+import { v4 as uuid } from 'uuid';
 
 export default function InputFormFunctional(props) {
   const [text, setText] = useState('');
   const [items, setItems] = useState([
-    { name: 'a', status: false, isEditing: false },
-    { name: 'b', status: true, isEditing: false },
-    { name: 'c', status: false, isEditing: false },
-    { name: 'd', status: true, isEditing: false },
-    { name: 'e', status: true, isEditing: false },
+    { id: uuid(), name: 'a', status: false, isEditing: false },
+    { id: uuid(), name: 'b', status: true, isEditing: false },
+    { id: uuid(), name: 'c', status: false, isEditing: false },
+    { id: uuid(), name: 'd', status: true, isEditing: false },
+    { id: uuid(), name: 'e', status: true, isEditing: false },
   ]);
-  const [iDone, setDone] = useState([]);
-  const [iTodo, setTodo] = useState([]);
+  
+  const iDone = useMemo(() => {
+    return items.filter(item => item.status === true);
+  }, [items]);
+  const iTodo = useMemo(() => {
+    return items.filter(item => item.status === false);
+  }, [items]);
   
   useEffect(() => {
-    const done = items.filter(item => item.status === true);
-    setDone(done);
-    const todo = items.filter(item => item.status === false);
-    setTodo(todo);
+    console.log(items);
   }, [items]);
 
   const submitForm = (e) => {
@@ -32,17 +35,16 @@ export default function InputFormFunctional(props) {
   }
 
   const addNewText = (newText) => {
-    const newItem = { name: newText, status: false, isEditing: false };
+    const newItem = { id: uuid(), name: newText, status: false, isEdit: false };
     const itemsCopy = [...items];
     itemsCopy.unshift(newItem);
     setItems(itemsCopy);
   }
 
-  const deleteItem = (itemIndex, itemStatus) => {
-    const itemsCopy = items.filter(item => item.status === itemStatus); // Copy of items to change
-    const newItems = items.filter(item => item.status === !itemStatus); // Copy of items that won't change
-    itemsCopy.splice(itemIndex, 1);
-    newItems.push(...itemsCopy);
+  const deleteItem = (itemId) => {
+    const newItems = [...items];
+    const indexToRemove = newItems.findIndex(item => item.id === itemId);
+    newItems.splice(indexToRemove, 1);
     setItems(newItems);
   }
   
@@ -50,28 +52,24 @@ export default function InputFormFunctional(props) {
     setText(e.target.value);
   }
   
-  const updateStatus = (newStatus, index) => {
-    const itemsCopy = items.filter(item => item.status !== newStatus); // Copy of items to change
-    const newItems = items.filter(item => item.status === newStatus); // Copy of items that won't change
-    itemsCopy[index].status = newStatus;
-    newItems.push(...itemsCopy);
+  const updateStatus = (newStatus, itemId) => {
+    const newItems = [...items];
+    const indexToUpdate = newItems.findIndex(item => item.id === itemId);
+    newItems[indexToUpdate].status = newStatus;
     setItems(newItems);
   }
   
-  const editMode = (index, isEdit, itemStatus) => {
-    const itemsCopy = items.filter(item => item.status === itemStatus); // Copy of items to change
-    const newItems = items.filter(item => item.status !== itemStatus); // Copy of items that won't change
-    
-    itemsCopy[index].isEditing = !isEdit;
-    newItems.push(...itemsCopy);
+  const editMode = (itemId) => {
+    const newItems = [...items];
+    const indexToUpdate = newItems.findIndex(item => item.id === itemId);
+    newItems[indexToUpdate].isEdit = !newItems[indexToUpdate].isEdit
     setItems(newItems);
   }
   
-  const onEditChange = (e, index, itemStatus) => {
-    const itemsCopy = items.filter(item => item.status === itemStatus); // Copy of items to change
-    const newItems = items.filter(item => item.status !== itemStatus); // Copy of items that won't change
-    itemsCopy[index].name = e.target.value;
-    newItems.push(...itemsCopy);
+  const onEditChange = (e, itemId) => {
+    const newItems = [...items];
+    const indexToUpdate = newItems.findIndex(item => item.id === itemId);
+    newItems[indexToUpdate].name = e.target.value;
     setItems(newItems);
   }
 
@@ -88,7 +86,7 @@ export default function InputFormFunctional(props) {
           <ListItems
             items={iTodo}
             deleteItem={deleteItem}
-            checkStatus={updateStatus}
+            updateStatus={updateStatus}
             editMode={editMode}
             onEditChange={onEditChange}
           />
@@ -101,7 +99,7 @@ export default function InputFormFunctional(props) {
           <ListItems
             items={iDone}
             deleteItem={deleteItem}
-            checkStatus={updateStatus}
+            updateStatus={updateStatus}
             editMode={editMode}
             onEditChange={onEditChange}
           />
