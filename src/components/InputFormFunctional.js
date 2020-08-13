@@ -3,22 +3,11 @@ import ListItems from './ListItems';
 import { Typography, Button, TextField, FormControl } from '@material-ui/core';
 import { v4 as uuid } from 'uuid';
 
-// Testing Arrays
-const todos = new Array(50).fill(null).map(() => ({ id: uuid(), name: 'spider', status: false, isEdit: false }));
-const dones = new Array(50).fill(null).map(() => ({ id: uuid(), name: 'man', status: true, isEdit: false }));
-
 export default function InputFormFunctional(props) {
   const [text, setText] = useState('');
   const [editionMode, setEditionMode] = useState(false);
   const [editionText, setEditionText] = useState('');
-  const [items, setItems] = useState([
-    { id: uuid(), name: 'a', status: false, isEdit: false },
-    { id: uuid(), name: 'b', status: true, isEdit: false },
-    { id: uuid(), name: 'c', status: false, isEdit: false },
-    { id: uuid(), name: 'd', status: true, isEdit: false },
-    { id: uuid(), name: 'e', status: true, isEdit: false },
-    ...todos, ...dones
-  ]);
+  const [items, setItems] = useState([]);
   
   const iDone = useMemo(() => {
     return items.filter(item => item.status === true);
